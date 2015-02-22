@@ -1,12 +1,6 @@
----
-title: "CodeBook"
-author: "si-Martin"
-date: "9 Feb 2015"
-output:
-  pdf_document: default
-  html_document:
-    keep_md: yes
----
+# CodeBook
+si-Martin  
+9 Feb 2015  
 
 The following code book sets out the data transformation protocol as defined for the course project. 
 
@@ -16,7 +10,8 @@ The protocol is defined as follows:<br>
  - X data in the test and train folder have been merged. Test data are on the top of the table. <br>
  - Y data in the test and train folder have been merged. Test data are on the top of the table. <br>
 
-```{r  cache=TRUE}
+
+```r
 #1. Subjects
 if (!exists("SubjTest")) SubjTest <- read.table("./test/subject_test.txt", header=FALSE)
 if (!exists("SubjTrain")) SubjTrain <- read.table("./train/subject_train.txt", header=FALSE)
@@ -42,21 +37,24 @@ Descriptive activity names have been added to name the activities in the data se
  - 5 STANDING <br>
  - 6 LAYING <br>
 
-```{r}
+
+```r
 if (!exists("ActLab")) ActLab <- read.table("activity_labels.txt", header=FALSE)
 mergedDataY <- merge(Ydata, ActLab, by.x="V1", by.y="V1")
 colnames(mergedDataY) <- c("ActivityID","ActivityLabel")
 ```
 
 Appropriate labels have been added to the column names. See appendix A for all the names. 
-```{r}
+
+```r
 if (!exists("Feat")) Feat <- read.table("features.txt", header=FALSE) # read the variable names
 colnames(Xdata) <- Feat$V2 # rename the columns
 ```
 
 The average of each variable for each activity and each subject has been calculated. As I was not sure whether to prepare two results sets (per activity and per subjecty OR per activity/subject), I have added all possiblities.
 
-```{r}
+
+```r
 Cdataset <- cbind(Subjects, mergedDataY, Xdata)
 Cdataset <- na.omit(Cdataset)
 CdatasetAvgAll <- aggregate(Cdataset[-3], by = list(Cdataset$Subjects, Cdataset$ActivityID), FUN=mean)
